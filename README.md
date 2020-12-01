@@ -2,7 +2,7 @@
 
 ## Overview
 
-This application allows you to initialize an S3 bucket and its subdirectories for testing purposes. This application has been containerized and can be used with docker or docker-compose. This application also provides a ui dashboard into the S3 server that it connects to.
+This application allows you to initialize an S3 bucket and its subdirectories for testing purposes. This application has been containerized and can be used with docker or docker-compose. This application also provides a ui dashboard into the S3 server that it connects to. This application will retry indefinitely to create the bucket and subdirectories until it is successful.
 
 ## Official GitHub repository
 

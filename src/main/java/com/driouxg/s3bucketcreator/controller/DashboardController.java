@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.driouxg.s3bucketcreator.config.S3Config;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.ConnectException;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,8 @@ public class DashboardController {
 
   @PostConstruct
   @Retryable(value = {AmazonS3Exception.class,
-      SdkClientException.class}, maxAttempts = 1000, backoff = @Backoff(delay = 1000L))
+      SdkClientException.class,
+      ConnectException.class}, maxAttempts = 1000, backoff = @Backoff(delay = 1000L))
   public void postConstruct() {
     LOGGER.info("Creating bucket: " + s3Config.getBucketName());
     amazonS3.createBucket(s3Config.getBucketName());

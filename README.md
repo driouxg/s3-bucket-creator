@@ -37,12 +37,12 @@ services:
 
 ## Environment Variables
 
-| Environment Variable   | Default                      | Type    | Description |
-|----------------------- |------------------------------|---------|-------------|
-| AWS_BUCKET_REGION      | us-west-2                    | String  | The region that the aws client will attempt to connect to the aws resource  |
-| AWS_ACCESS_KEY         | test                         | String  | The access key used to authenticate with the aws s3 endpoint           |
-| AWS_SECRET_KEY         | test                         | String  | The secret key used to authenticate with the aws s3 endpoint  |
-| AWS_S3_URL             | localhost:4566               | String  | The url for the s3 service                                    |
-| AWS_BUCKET_NAME        | home                         | String  | The name of the bucket that will be created in the s3 endpoint |
+| Environment Variable   | Default                      | Type            | Description                                       |
+|----------------------- |------------------------------|-----------------|---------------------------------------------------|
+| AWS_BUCKET_REGION      | us-west-2                    | String          | The region that the aws client will attempt to connect to the aws resource  |
+| AWS_ACCESS_KEY         | test                         | String          | The access key used to authenticate with the aws s3 endpoint           |
+| AWS_SECRET_KEY         | test                         | String          | The secret key used to authenticate with the aws s3 endpoint  |
+| AWS_S3_URL             | localhost:4566               | String          | The url for the s3 service                                    |
+| AWS_BUCKET_NAME        | home                         | String          | The name of the bucket that will be created in the s3 endpoint |
 | AWS_KEYS_TO_BE_CREATED | bucket1,bucket1/subDirectory | List of Strings | The subdirectories that will be created inside of the bucket |
 | SERVER_PORT            | 8080                         | Integer         | The port for the spring boot application to run on |

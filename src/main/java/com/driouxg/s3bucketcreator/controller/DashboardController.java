@@ -31,12 +31,15 @@ public class DashboardController {
 
   private void configureS3() {
     retryTemplate.execute(arg -> {
+      if (arg.getLastThrowable() != null) {
+        LOGGER.error("Retrying s3 initialization due to:", arg.getLastThrowable());
+      }
+
       LOGGER.info("Creating bucket: " + s3Config.getBucketName());
       amazonS3.createBucket(s3Config.getBucketName());
       LOGGER.info("Creating keys: " + s3Config.getKeysToBeCreated());
       createFolders();
       LOGGER.info("Created buckets and keys.");
-      amazonS3.listBuckets().forEach(b -> System.out.println(b.getName()));
 
       arg.setExhaustedOnly();
 

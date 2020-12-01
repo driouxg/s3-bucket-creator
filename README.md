@@ -35,7 +35,7 @@ services:
       ports:
       - "8080:8080"
       environment:
-      - AWS_S3_URL=localhost:4566
+      - AWS_S3_URL=amazon-web-services:4566
       - AWS_BUCKET_NAME=myBucketName
       - AWS_KEYS_TO_BE_CREATED=subdirectory1,subdirectory1/nestedSubdirectory
       - AWS_ACCESS_KEY=test

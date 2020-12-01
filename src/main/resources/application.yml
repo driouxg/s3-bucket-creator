@@ -1,0 +1,16 @@
+cloud:
+  aws:
+    region:
+      auto: false
+      static: ${AWS_BUCKET_REGION:us-west-2}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:test}
+      secret-key: ${AWS_SECRET_KEY:test}
+    s3:
+      url: ${AWS_S3_URL:localhost:4566}
+      keysToBeCreated: ${AWS_KEYS_TO_BE_CREATED:bucket1,bucket2,bucket3,bucket1/sub}
+      bucketName: ${AWS_BUCKET_NAME:home}
+    stack:
+      auto: false
+server:
+  port: ${SERVER_PORT:8080}

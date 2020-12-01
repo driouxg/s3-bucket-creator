@@ -1,0 +1,71 @@
+package com.driouxg.s3bucketcreator.controller;
+
+import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.driouxg.s3bucketcreator.config.S3Config;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class DashboardController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
+
+  private AmazonS3 amazonS3;
+  private S3Config s3Config;
+
+  public DashboardController(S3Config s3Config, AmazonS3 amazonS3) {
+    this.amazonS3 = amazonS3;
+    this.s3Config = s3Config;
+  }
+
+  @PostConstruct
+  @Retryable(value = {AmazonS3Exception.class,
+      SdkClientException.class}, maxAttempts = 1000, backoff = @Backoff(delay = 1000L))
+  public void postConstruct() {
+    LOGGER.info("Creating bucket: " + s3Config.getBucketName());
+    amazonS3.createBucket(s3Config.getBucketName());
+    LOGGER.info("Creating keys: " + s3Config.getKeysToBeCreated());
+    createFolders();
+    LOGGER.info("Created buckets and keys.");
+    amazonS3.listBuckets().forEach(b -> System.out.println(b.getName()));
+  }
+
+  private void createFolders() {
+    s3Config.getKeysToBeCreated().forEach(b -> {
+      ObjectMetadata metadata = new ObjectMetadata();
+      metadata.setContentLength(0);
+      // create empty content
+      InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
+      // create a PutObjectRequest passing the folder name suffixed by /
+      PutObjectRequest putObjectRequest = new PutObjectRequest(s3Config.getBucketName(),
+          "/" + b + "/", emptyContent, metadata);
+      // send request to S3 to create folder
+      amazonS3.putObject(putObjectRequest);
+    });
+  }
+
+  @GetMapping("/")
+  public ModelAndView getDashboardView() {
+    ModelAndView modelAndView = new ModelAndView("dashboard");
+    modelAndView.addObject("message", "Spring Boot with AWS");
+    modelAndView.addObject("bucketName", s3Config.getBucketName());
+    modelAndView
+        .addObject("bucketLocation", amazonS3.getBucketLocation(s3Config.getBucketName()));
+    modelAndView
+        .addObject("availableFiles",
+            amazonS3.listObjects(s3Config.getBucketName()).getObjectSummaries());
+    return modelAndView;
+  }
+}

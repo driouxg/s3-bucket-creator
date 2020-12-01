@@ -26,6 +26,8 @@ services:
 
     s3-bucket-creator:
       image: driouxg/s3-bucket-creator:
+      ports:
+      - "8080:8080"
       environment:
       - AWS_S3_URL=localhost:4566
       - AWS_BUCKET_NAME=myBucketName

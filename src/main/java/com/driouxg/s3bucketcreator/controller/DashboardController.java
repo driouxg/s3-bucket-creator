@@ -37,6 +37,9 @@ public class DashboardController {
       createFolders();
       LOGGER.info("Created buckets and keys.");
       amazonS3.listBuckets().forEach(b -> System.out.println(b.getName()));
+
+      arg.setExhaustedOnly();
+
       return null;
     });
   }

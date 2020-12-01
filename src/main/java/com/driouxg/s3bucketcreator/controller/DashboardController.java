@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,23 +26,25 @@ public class DashboardController {
 
   private AmazonS3 amazonS3;
   private S3Config s3Config;
+  private RetryTemplate retryTemplate;
 
-  public DashboardController(S3Config s3Config, AmazonS3 amazonS3) {
+  public DashboardController(S3Config s3Config, AmazonS3 amazonS3, RetryTemplate retryTemplate) {
     this.amazonS3 = amazonS3;
     this.s3Config = s3Config;
+    this.retryTemplate = retryTemplate;
   }
 
   @PostConstruct
-  @Retryable(value = {AmazonS3Exception.class,
-      SdkClientException.class,
-      ConnectException.class}, maxAttempts = 1000, backoff = @Backoff(delay = 1000L))
   public void postConstruct() {
-    LOGGER.info("Creating bucket: " + s3Config.getBucketName());
-    amazonS3.createBucket(s3Config.getBucketName());
-    LOGGER.info("Creating keys: " + s3Config.getKeysToBeCreated());
-    createFolders();
-    LOGGER.info("Created buckets and keys.");
-    amazonS3.listBuckets().forEach(b -> System.out.println(b.getName()));
+    retryTemplate.execute(arg -> {
+      LOGGER.info("Creating bucket: " + s3Config.getBucketName());
+      amazonS3.createBucket(s3Config.getBucketName());
+      LOGGER.info("Creating keys: " + s3Config.getKeysToBeCreated());
+      createFolders();
+      LOGGER.info("Created buckets and keys.");
+      amazonS3.listBuckets().forEach(b -> System.out.println(b.getName()));
+      return null;
+    });
   }
 
   private void createFolders() {

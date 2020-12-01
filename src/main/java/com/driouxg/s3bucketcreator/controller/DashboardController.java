@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.driouxg.s3bucketcreator.config.S3Config;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.retry.support.RetryTemplate;
@@ -27,10 +26,10 @@ public class DashboardController {
     this.amazonS3 = amazonS3;
     this.s3Config = s3Config;
     this.retryTemplate = retryTemplate;
+    configureS3();
   }
 
-  @PostConstruct
-  public void postConstruct() {
+  private void configureS3() {
     retryTemplate.execute(arg -> {
       LOGGER.info("Creating bucket: " + s3Config.getBucketName());
       amazonS3.createBucket(s3Config.getBucketName());

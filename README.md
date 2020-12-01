@@ -13,6 +13,8 @@ The ui dashboard is reachable at the configured host `localhost:SERVER_PORT`. So
 This application can be used with docker compose. Example docker-compose usage with localstack S3 instance:
 
 ```dockerfile
+version: '3.7'
+
 services:
     amazon-web-services:
       image: localstack/localstack-full

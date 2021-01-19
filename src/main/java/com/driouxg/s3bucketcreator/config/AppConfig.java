@@ -1,7 +1,7 @@
 package com.driouxg.s3bucketcreator.config;
 
 import com.amazonaws.SDKGlobalConfiguration;
-import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
@@ -23,14 +23,15 @@ public class AppConfig {
       @Value("cloud.aws.credentials.secret-key") String secretKey) {
     System.setProperty(SDKGlobalConfiguration.DISABLE_CERT_CHECKING_SYSTEM_PROPERTY, "true");
 
-    AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+    AWSCredentialsProvider credentials = new AWSStaticCredentialsProvider(
+        new BasicAWSCredentials(accessKey, secretKey));
 
     EndpointConfiguration epc = new EndpointConfiguration(s3Config.getUrl(), region);
 
     return AmazonS3ClientBuilder
         .standard()
         .withEndpointConfiguration(epc)
-        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withCredentials(credentials)
         .enablePathStyleAccess()
         .build();
   }
@@ -40,7 +41,7 @@ public class AppConfig {
     RetryTemplate retryTemplate = new RetryTemplate();
 
     FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
-    fixedBackOffPolicy.setBackOffPeriod(2000l);
+    fixedBackOffPolicy.setBackOffPeriod(2000L);
     retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
 
     SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();

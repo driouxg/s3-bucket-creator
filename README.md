@@ -8,6 +8,10 @@ This application allows you to initialize an S3 bucket and its subdirectories fo
 
 https://github.com/driouxg/s3-bucket-creator
 
+## DockerHub Link
+
+https://hub.docker.com/repository/docker/driouxg/s3-bucket-creator
+
 ## UI Dashboard
 
 The ui dashboard is reachable at the configured host `localhost:SERVER_PORT`. So, if you configured the SERVER_PORT environment variable to `8000` the ui dashboard would be visible at `localhost:8000`.

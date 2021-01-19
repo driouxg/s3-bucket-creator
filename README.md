@@ -16,6 +16,23 @@ https://hub.docker.com/repository/docker/driouxg/s3-bucket-creator
 
 The ui dashboard is reachable at the configured host `localhost:SERVER_PORT`. So, if you configured the SERVER_PORT environment variable to `8000` the ui dashboard would be visible at `localhost:8000`.
 
+## Init Folder
+
+You can initialize your S3 bucket with files on creation by mounting files into the `~/init/` directory.
+
+```dockerfile
+version '3.7'
+
+services:
+    amazon-web-services:
+      image: localstack/localstack-full
+      ports:
+      - "4566:4566"
+      - "3000:3000"
+      volumes:
+      - ./amazon-web-services/init/:~/init/
+```
+
 ## Docker Compose
 
 This application can be used with docker compose. Example docker-compose usage with localstack S3 instance:

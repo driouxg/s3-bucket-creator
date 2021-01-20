@@ -24,13 +24,12 @@ You can initialize your S3 bucket with files on creation by mounting files into 
 version '3.7'
 
 services:
-    amazon-web-services:
-      image: localstack/localstack-full
+    s3-bucket-creator:
+      image: driouxg/s3-bucket-creator:
       ports:
-      - "4566:4566"
-      - "3000:3000"
+      - "8080:8080"
       volumes:
-      - ./amazon-web-services/init/:~/init/
+      - <host-dir>:/init/
 ```
 
 ## Docker Compose

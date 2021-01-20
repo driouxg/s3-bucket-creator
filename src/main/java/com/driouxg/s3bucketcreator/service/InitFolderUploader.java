@@ -30,7 +30,7 @@ public class InitFolderUploader {
   }
 
   public void uploadInitFolder() {
-    File file = new File("~/init/");
+    File file = new File("/init/");
 
     if (file.exists()) {
       LOGGER.info("init folder exists. Uploading contents to S3 bucket.");
@@ -41,7 +41,7 @@ public class InitFolderUploader {
   }
 
   private void go() {
-    List<String> filePaths = getAllFilePaths("~/init/", new ArrayList<>());
+    List<String> filePaths = getAllFilePaths("/init/", new ArrayList<>());
 
     for (String path : filePaths) {
       try {
